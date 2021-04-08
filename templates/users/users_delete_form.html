@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block container %}
+
+	<h1>УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ</h1>
+	<form action="" method="post">{% csrf_token %}
+	
+	<p>ВЫ ДЕЙСТВИТЕЛЬНО ХОТИТЕ УДАЛИТЬ ПОЛЬЗОВАТЕЛЯ {{ user.username }} ?</p>
+	
+	{{ form.as_p }}
+	
+	<input type="submit" value="УДАЛИТЬ" />
+	
+	</form>
+
+
+{% endblock %}

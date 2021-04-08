@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name ="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body>
+
+{% if form.alert_about_complete_reg %}
+	<nav class="navbar navbar-expand-lg navbar-dark bg-warning">
+		<nav class="container-fluid">
+				Вы не можете войти, потому что не верифицировали аккаут. Проверьте email! Мы отправили Вам письмо для подтверждения регистрации.
+		</nav>
+	</nav>
+{% endif %}
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">	
+	<a class="navbar-brand" href="#">Просто сайт с регистрацией</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a href="/" class="btn btn-primary btn-lg active" role="button">ГЛАВНАЯ<span class="sr-only">(current)</span></a>
+            </li>
+				
+			<li class="nav-item active">
+                <a href="{% url 'user:signup' %}" class="btn btn-primary btn-lg active" role="button">РЕГИСТРАЦИЯ</a>
+            </li>
+				
+			<li class="nav-item active">
+				{% if user.is_authenticated %}
+                    <a href="{% url 'user:logout' %}" class="btn btn-primary btn-lg active" role="button">ВЫЙТИ</a>
+				{% else %}
+					<a href="{% url 'user:login' %}" class="btn btn-primary btn-lg active" role="button">ВОЙТИ</a>
+				{% endif %}
+            </li>
+				
+			<li class="nav-item active">
+                    
+            </li>
+        </ul>
+    </div>
+</nav>
+	
+
+{% if user.is_authenticated %}
+	<p>Привет, {{ user.username }}!</p>		
+{% else %}
+	<p>Вы не вошли на сайт</p>
+{% endif %}
+	
+	
+	
+	
+	
+	
+
+<div class="container">
+    <div class="row spacer"></div>
+        <div class="row offset-2">
+            <div class="col-12">
+                {% block container %}
+				
+				
+					
+				
+                {% endblock %}
+            </div>
+		</div>
+</div>
+
+{% block custom_js %}{% endblock %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.6.0/umd/popper.min.js" integrity="sha512-BmM0/BQlqh02wuK5Gz9yrbe7VyIVwOzD1o40yi1IsTjriX/NGF37NyXHfmFzIlMmoSIBXgqDiG1VNU6kB5dBbA==" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>

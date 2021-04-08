@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block container %}
+
+
+
+
+
+<form action="" method="post">
+	{% csrf_token %}
+	
+	<div class="w-100">
+	<div class="field">
+		<label for="{{ form.username.id_for_label }}" class="label">
+		Имя пользователя
+		</label>
+		<div class="control">
+			{{ form.username }}
+		</div>
+	</div>
+
+	<div class="field">
+		<label for="{{ form.email.id_for_label }}" class="label">
+			Email
+		</label>
+		<div class="control">
+			{{ form.email }}
+		</div>
+	</div>
+				
+	<div class="field w-auto">
+		<label for="{{ form.phone.id_for_label }}" class="label">
+			Телефонный номер
+		</label>
+		<div class="control">
+			{{ form.phone }}
+		</div>
+	</div>
+
+	<div class="field">
+		<label for="{{ form.is_staff.id_for_label }}" class="label">
+			Является ли администратором?
+		</label>
+		<div class="control">
+			{{ form.is_staff }}
+		</div>
+	</div>
+
+	<div class="field">
+		<label for="{{ form.is_active.id_for_label }}" class="label">
+			Активирован?:
+		</label>
+		<div class="control">
+			{{ form.is_active }}
+		</div>
+	</div>
+	</div>
+	
+	<input type="submit" value="ПРИНЯТЬ" />
+	
+</form>
+
+{% endblock %}

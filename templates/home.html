@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+
+{% block container %}
+
+
+<a href="{% url 'user:users' %}" class="btn btn-primary btn-lg active" role="button">ПОЛЬЗОВАТЕЛИ</a>
+<a href="{% url 'secretkey:secretkey' %}" class="btn btn-primary btn-lg active" role="button">SECRET KEY</a>
+
+{% endblock %}

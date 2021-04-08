@@ -1,0 +1,39 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	
+	<meta name ="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body>
+	<div class="container">
+		<div class="row offset-2">
+			<div class="col-12">
+				{% if users_ids|length == 0 %}
+				
+					<h4>Вы не выбрали ни одного пользователя.</h4>
+					<a href="{% url 'user:users' %}" class="btn btn-primary btn-lg active" role="button">ВЕРНУТЬСЯ К СПИСКУ ПОЛЬЗОВАТЕЛЕЙ</a>
+					
+				{% else %}
+				
+					<form method="POST" action="{% url 'user:delete_users' %}">
+						{% csrf_token %}
+						{% for id in users_ids %}
+						<label class="container" hidden="true">
+							<p><input type="checkbox" name="id" value="{{ id }}" checked="true">к удалению</p>
+							<span class="checkmark"></span>
+						</label>
+						{% endfor %}
+						
+						<h4>Вы действительно хотите удалить {{ users_ids|length }} выбранных объектов?</h4>
+						<input type="submit" id="sendAll" value="УДАЛИТЬ">
+					</form>
+				
+				{% endif %}
+				
+			</div>
+		</div>
+	</div>
+</body>
+</html>
