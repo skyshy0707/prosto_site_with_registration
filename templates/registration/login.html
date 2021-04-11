@@ -2,22 +2,22 @@
 {% load widget_tweaks %}
 {% block container %}
 
-{% if request.session.admin_access_only %}
+{% if request.session.access %}
 	<div class="container-fluid">
 		<div class="alert alert-info">
-			<p>{{ request.session.admin_access_only }}</p>
+			<p>{{ request.session.access }}</p>
 		</div>
 	</div>
 {% endif %}
 
 
-<p>{{ request.session.params.message }}</p>
-{% if request.session.params.status == 'sent' %}
-	<p>Если не получали токен, то нажмите на кнопку "ОТПРАВИТЬ ТОКЕН СНОВА"</p>
-	<a href="{% url 'user:send_token_again' request.session.params.user_id %}" class="btn btn-primary btn-lg active" role="button">ОТПРАВИТЬ ТОКЕН СНОВА</a>
-{% elif request.session.params.status == 'fail' and request.session.params.user_id %}
+<p>{{ request.session.account_verification.message }}</p>
+{% if request.session.account_verification.status == 'sent' %}
+	<p>Если Вы не получали письма, то нажмите на кнопку "ОТПРАВИТЬ ИНСТРУКЦИЮ СНОВА"</p>
+	<a href="{% url 'user:send_token_again' request.session.account_verification.user_id %}" class="btn btn-primary btn-lg active" role="button">ОТПРАВИТЬ ТОКЕН СНОВА</a>
+{% elif request.session.account_verification.status == 'fail' and request.session.account_verification.user_id %}
 	<p>Токен недействителен</p>
-	<a href="{% url 'user:send_token_again' request.session.params.user_id %}" class="btn btn-primary btn-lg active" role="button">ОТПРАВИТЬ ТОКЕН СНОВА</a>
+	<a href="{% url 'user:send_token_again' request.session.account_verification.user_id %}" class="btn btn-primary btn-lg active" role="button">ОТПРАВИТЬ ТОКЕН СНОВА</a>
 {% endif %}
 
 
@@ -26,6 +26,7 @@
 <h3>Войти</h3>
 <form method="post">
 	{% csrf_token %}
+	{{ form.non_field_errors }}
 	<div class="field">
         <label for="{{ form.username.id_for_label }}" class="label">
             Имя пользователя:

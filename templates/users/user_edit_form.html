@@ -3,43 +3,43 @@
 {% block container %}
 
 
-
-
-
 <form action="" method="post">
 	{% csrf_token %}
 	
 	<div class="w-100">
 	<div class="field">
 		<label for="{{ form.username.id_for_label }}" class="label">
-		Имя пользователя
+		Имя пользователя:
 		</label>
 		<div class="control">
 			{{ form.username }}
 		</div>
+		<p class="help is-danger">{{ form.phone.username }}</p>
 	</div>
 
 	<div class="field">
 		<label for="{{ form.email.id_for_label }}" class="label">
-			Email
+			Email:
 		</label>
 		<div class="control">
 			{{ form.email }}
 		</div>
+		<p class="help is-danger">{{ form.phone.email }}</p>
 	</div>
 				
 	<div class="field w-auto">
 		<label for="{{ form.phone.id_for_label }}" class="label">
-			Телефонный номер
+			Телефонный номер:
 		</label>
 		<div class="control">
 			{{ form.phone }}
 		</div>
+		<p class="help is-danger">{{ form.phone.errors }}</p>
 	</div>
 
 	<div class="field">
 		<label for="{{ form.is_staff.id_for_label }}" class="label">
-			Является ли администратором?
+			Является ли администратором?:
 		</label>
 		<div class="control">
 			{{ form.is_staff }}

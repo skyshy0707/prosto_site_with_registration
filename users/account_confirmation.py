@@ -1,3 +1,9 @@
+"""
+Модуль используется для отправки пользователю
+письма с инструкцией по верификации аккаута и
+готовит для этого необходимые данные.
+"""
+
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.db import IntegrityError
@@ -5,8 +11,8 @@ from django.shortcuts import reverse
 from django.template.loader import get_template
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+
 from .models import VerificationCode as VCode
-"""from rest_framework.authtoken.models import Token"""
 from .models import User
 from secretkey.generate_secret_key import generate_key
 
@@ -14,13 +20,15 @@ from secretkey.generate_secret_key import generate_key
 
 def create_unactive_user(form):
 	"""
-	Назначение: создаёт экз. модели User
+	Назначение: создаёт экз. модели 
+				users.models.User
 				со статусом is_active = False
 	
 	Принимает на вход экз. класса формы 
-	SignupForm c queryset полей модели User
+	users.forms.SignupForm c queryset полей 
+	модели users.models.User
 	
-	Возвращает экз. модели User
+	Возвращает экз. модели users.models.User
 	"""
 	user = form.save(commit=False)
 	user.is_active = False
@@ -34,11 +42,11 @@ def get_user(user_id):
 				из БД по зашифрованному id из 
 				http-запроса на верификацию аккаута
 	
-	Принимает на вход id модели User user_id
-	в зашифрованном виде
+	Принимает на вход id модели users.models.User 
+	user_id в зашифрованном виде
 	
-	Возвращает объект модели User или None
-	если пользователь не существует
+	Возвращает объект модели users.models.User 
+	или None если пользователь не существует
 	"""
 	user_id = force_bytes(urlsafe_base64_decode(user_id))
 	try:
@@ -53,9 +61,9 @@ def get_conf_token(user):
 				уникальный ключ token, используемый
 				для подтверждения пользователя
 	
-	Принимает на вход экз. модели User
+	Принимает на вход экз. модели users.models.User
 	
-	Вовзращает уникальный ключ
+	Вовзращает уникальный ключ (строка)
 	"""
 	key = generate_key(length=30)
 	try:
@@ -78,8 +86,8 @@ def is_right_token(user, sent_token):
 	Назначение: Проверка правильности уникального ключа
 				верификации аккаута
 	
-	Принимает на вход экз. модели User (user) и уникальный
-	ключ из http-запроса от клиента
+	Принимает на вход экз. модели users.models.User (user) 
+	и уникальный ключ из http-запроса от клиента (sent_token)
 	
 	Возвращает условие равенства уник. ключа из запроса и
 	значения, хранящегося в БД.
@@ -94,16 +102,19 @@ def create_template_for_req_user(redirect_link):
 	Декоратор, создающий шаблон для отправки 
 	письма клиенту на подтверждение верификации аккаута
 	
-	Принимает на вход метод создания ссылки redirect_link, 
+	Оборачивает метод создания ссылки redirect_link, 
 	по которой переходит клиент для подтверждения аккаута
 	
 	Возвращает объект кл. django.template.Template
 	"""
 	def template(user, token):
 		url = redirect_link(user, token)
-		template = get_template('confirm_user.html')
+		template = get_template('users/confirm_user.html')
 		return template.render({'redirect_link': url,
 								'username': user.username})
+								
+	template.__doc__ = redirect_link.__doc__
+	template.__name__ = redirect_link.__name__
 	return template
 
 
@@ -111,16 +122,19 @@ def send_template(message):
 	"""
 	Декоратор, отправляющий шаблон письма клиенту
 	
-	Принимает на вход метод create_template_for_req_user,
+	Оборачивает метод create_template_for_req_user,
 	который возвращает шаблон письма
 	"""
 	def send(user, token):
-		mail = EmailMessage('email_verification', 
+		mail = EmailMessage('подтверждение аккаута', 
 							message(user, token), 
 							to=[user.email], 
 							from_email=settings.EMAIL_HOST_USER)
 		mail.content_subtype = 'html'
 		mail.send()
+		
+	send.__doc__ = message.__doc__
+	send.__name__ = message.__name__
 	return send
 
 @send_template
@@ -128,10 +142,10 @@ def send_template(message):
 def redirect_link(user, token):
 	"""
 	Метод, генерирующий ссылку по которой переходит
-	клиент для подтверждения акуаута
+	клиент для подтверждения аккаута
 	
-	принимает на вход экз. модели User (user)
-	и сгенерированный уникальный ключ.
+	Принимает на вход экз. модели users.models.User 
+	(user) и сгенерированный уникальный ключ (token).
 	
 	Возвращает строку в формате:
 	
@@ -144,13 +158,15 @@ def redirect_link(user, token):
 
 def send_message_to_activate(user):
 	"""
-	Процедура, генерирующая уникальный ключ в своём теле
-	и отправляющая письмо клиенту на email с инструкцией 
-	по верификации акаута
+	Процедура, вызывающая в своём теле 
+	метод генерирования уникального ключа 
+	и отправляющая письмо клиенту на email 
+	с инструкцией по верификации акаута
+	
+	Используется в контроллерах 
+	users.views.SendTokenAgain,
+	users.views.TokenVerification,
+	users.views.SignupView
 	"""
 	token = get_conf_token(user)
-	redirect_link(user, token)
-
-													 
-					 
-	
+	redirect_link(user, token)											

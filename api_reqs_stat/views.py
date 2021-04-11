@@ -1,10 +1,11 @@
 from braces.views import GroupRequiredMixin
-from . import make_diagramm as md
 from django.shortcuts import render, redirect
 from django.views import View
+
+from . import make_diagramm as md
+from .api_settings import API_NAMES
 from .forms import SelectAPI
 from .models import ReqsStat
-from .api_settings import API_NAMES
 # Create your views here.
 
 
@@ -12,28 +13,30 @@ class APIRequestsStat(GroupRequiredMixin, View):
 
 	group_required = (u"admins",)
 	"""
-	Класс контроллера, рендерящий страницу
+	Контроллер рендерит страницу
 	статистики запросов к функции REST API
 	по конкретному пользователю c id=pk:
 	
-	home.ru/user_api_reqs_stat/pk
+	https://127.0.0.1/user_api_reqs_stat/pk
 	"""
 	
 	def get(self, request, *args, **kwargs):
 		"""
 		На странице:
-		home.ru/user_api_reqs_stat/pk
+		https://127.0.0.1/user_api_reqs_stat/pk
 		рендерится форма api_reqs_stat.forms.SelectAPI 
 		с полем выпадающего списка функций REST API
 		"""
-		return render(request, 'select_api.html', {'form': SelectAPI(),
-												   'user_id': kwargs['pk']})
+		return render(request, 'api_reqs_stat/select_api.html', {
+			'form': SelectAPI(),
+			'user_id': kwargs['pk']}
+		)
 		
 	
 	def post(self, request, *args, **kwargs):
 		"""
 		После подтверждения выбора функции REST API на странице:
-		home.ru/user_api_reqs_stat/pk
+		https://127.0.0.1/user_api_reqs_stat/pk
 		рендерится диаграмма частоты запросов по датам
 		к функции REST API по конкретному пользователю
 		
@@ -52,7 +55,7 @@ class APIRequestsStat(GroupRequiredMixin, View):
 										   api_name=api_name,)	
 										   
 			md.plot(reqs, user_id, api_name)
-			return render(request, 'draft_api_reqs_stat.html', context)
+			return render(request, 'api_reqs_stat/draft_api_reqs_stat.html', context)
 			
 		return redirect('api_reqs_stat:stat', user_id)
 			

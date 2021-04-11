@@ -1,17 +1,34 @@
 import binascii
 import os
+
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from users.SignupForm.field_validators import (validate_format_username, 
+											   validate_format_phone)
 # Create your models here.
 
-
-
-class User(User):
+class User(AbstractUser):
 	
-	phone = models.CharField(max_length=200)
+	username = models.CharField(
+        _('username'),
+        max_length=150,
+        unique=True,
+		validators=[validate_format_username],
+        help_text=_('До 150 символов. Допустимые символы --- буквы, цифры или @/./+/-/_ only.'),
+    )
+	
+	email = models.EmailField(_('email address'), blank=True, unique=True)
+	
+	phone = models.CharField(
+		max_length=200, 
+		validators=[validate_format_phone],
+		help_text=_('До 200 символов. Допустимый формат: +XXX...XXX, XXX...XXX'),
+	)
+	
 	
 class VerificationCode(models.Model):
 	"""
@@ -47,4 +64,5 @@ class VerificationCode(models.Model):
 	def __str__(self):
 		return self.key
 		
-admin.site.register(VerificationCode,)
+admin.site.register(VerificationCode)
+admin.site.register(User)

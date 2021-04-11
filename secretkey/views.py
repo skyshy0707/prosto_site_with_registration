@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import render
-from users.auth_decorators import login_required
-from .models import SecretKey
+
 from . import generate_secret_key as gkey
+from .models import SecretKey
+
 # Create your views here.
 
 
@@ -10,13 +12,15 @@ from . import generate_secret_key as gkey
 def generate_secret_key(request):
 	"""
 	Контроллер, рендерит страницу
-	home.ru/secretkey
+	https://127.0.0.1/secretkey
 	на которой аутентифицированный пользователь
 	видит свой уникальный токен, с помощью
 	которого осуществляется доступ к REST API
 	
-	В контекст передаётся secretkey, значение которого
+	В контекст передаётся secretkey, значение которого ---
 	16-ичное незашифрованное число, записанное в перем. key
+	
+	Доступ к странице контроллер разрешает при авторизации.
 	"""
 	key = gkey.generate_key()
 	xkey = gkey.get_xkey_value(key)
@@ -34,5 +38,5 @@ def generate_secret_key(request):
 			except IntegrityError as e:
 				continue
 			
-	return render(request, 'secret_key.html', {'secretkey': key})
+	return render(request, 'secretkey/secret_key.html', {'secretkey': key})
 	

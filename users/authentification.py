@@ -1,9 +1,15 @@
+"""
+Модуль аутентификации пользователей 
+в REST API сайта
+"""
+
 import datetime
-from datetime import datetime as dt
 from django.contrib.auth.models import User
 from django.middleware.csrf import CsrfViewMiddleware
+from django.utils import timezone
 from rest_framework import exceptions
 from rest_framework.authentication import BaseAuthentication
+
 from secretkey.generate_secret_key import get_xkey_value
 from secretkey.models import SecretKey
 
@@ -12,7 +18,7 @@ class CSRFCheck(CsrfViewMiddleware):
 	Класс, используемый для проверки csrf-токена
 	"""
 	def _reject(self, request, reason):
-		# Return the failure reason instead of an HttpResponse
+		# вместо HttpResponse возвращает причину запрещения доступа
 		return reason
 		
 		
@@ -23,10 +29,12 @@ class SecretKeyAuthentication(BaseAuthentication):
 	
 	Задан в качестве класса по умолчанию
 	в переменной settings.REST_FRAMEWORK
+	в качестве класса аутентификации по 
+	умолчанию
 	"""
 	
-	#срок действия токена доступа в дн.:
-	validity = datetime.timedelta(days=4)
+	#срок действия токена доступа в ч:
+	validity = datetime.timedelta(hours=64)
 	
 	
 	def authenticate(self, request):
@@ -44,7 +52,7 @@ class SecretKeyAuthentication(BaseAuthentication):
 		
 		#проверка срока дейтствия и наличия токена доступа:
 		secretkey = SecretKey.objects.filter(xkey=get_xkey_value(access_key)).first()
-		if not secretkey or secretkey.created + self.validity < dt.now():
+		if not secretkey or (secretkey.created + self.validity) < timezone.now():
 			raise exceptions.AuthenticationFailed('access_token expired')
 		
 		#проверка статуса активации пользователя:
@@ -62,10 +70,10 @@ class SecretKeyAuthentication(BaseAuthentication):
 		Принудительная проверка CSRF
 		"""
 		check = CSRFCheck()
-		# помещаем request.META['CSRF_COOKIE'], которое будет использоваться в process_view():
+		# помещаем request.META['CSRF_COOKIE'], что будет использоваться в process_view():
 		check.process_request(request)
 		reason = check.process_view(request, None, (), {})
 		print(reason)
 		if reason:
-			# Ошибка CSRF --- вызываем сообщение об ошибке:
+			# если ошибка CSRF --- вызываем сообщение об ошибке:
 			raise exceptions.PermissionDenied('CSRF Failed: %s' % reason)

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block container %}
+	<h2 class="text-center pl-5">СТАТИСТИКА ЗАПРОСОВ К ФУНКЦИИ REST API</h2> 
+	<h2 class="text-center pl-5">"{{ api_name }}"</h2>
+	<img src="\{{ file }}">
+
+{% endblock %}

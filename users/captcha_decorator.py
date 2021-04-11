@@ -1,26 +1,26 @@
 """
 Модуль с реализацией проверки каптчи
+при регистрации пользователя
 """
-
 from django.conf import settings
 from django.contrib import messages
-
 import requests
 
 
 def check_recaptcha(function):
 	"""
-	Декоратор, используемый для оборачивания контроллера,
-	отвечающего за рендеринг страницы регистрации нового
-	пользователя с формой регистрации данных.
+	Декоратор оборачивает контроллер
+	users.views.SignupView.
 	
+	Используется для вставки каптчи в форму регистрации.
 	
-	Схема проверки:
+	Схема проверки каптчи:
 	
 	1) Анализируем ответ google-сервера о валидации каптчи
-	recaptcha_response, в поле 'g-recaptcha-response'
+	в поле 'g-recaptcha-response'.(ответ записан в перем.
+	recaptcha_response).
 	
-	2) Посылаем данные recaptcha_response и секретный ключ
+	2) Посылаем данные --- recaptcha_response и секретный ключ
 	settings.GOOGLE_RECAPTCHA_SECRET_KEY
 	
 	3) Получаем финальный ответ от google-сервера о валидации

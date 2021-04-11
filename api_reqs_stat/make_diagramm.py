@@ -17,11 +17,14 @@ import os
 import pylab
 from django.conf import settings
 
+# перем. для показа пустой диаграммы
+# (если у полльзователя вообще не было запросов):
 DEFAULT_DATE_NULL = [(datetime.now().date(), 0)]
 
 def get_orded_dates_reqs(reqs):
 	"""
-	Принимает на вход список экз. кл. ReqsStat
+	Принимает на вход список экз. кл. 
+	api_reqs_stat.model.ReqsStat
 	
 	Возвращает упорядоченный список кортежей 
 	из дат запросов и их частот. Список упорядочен
@@ -55,7 +58,8 @@ def get_freqs_to_OY(dates):
 
 def get_x_y(reqs,):
 	"""
-	Принимает на вход список экз. кл. ReqsStat.
+	Принимает на вход список экз. кл. 
+	api_reqs_stat.model.ReqsStat.
 	
 	Возвращает два списка --- список дат и
 	список частот запросов.
@@ -67,7 +71,6 @@ def get_x_y(reqs,):
 	"""
 	
 	dates_ord = get_orded_dates_reqs(reqs)
-	print("dates_ord", dates_ord)
 	dates = get_datas_to_OX(dates_ord)
 	freqs = get_freqs_to_OY(dates_ord)
 	return dates, freqs
@@ -84,7 +87,7 @@ def get_filename(user_id, api_name,):
 	
 	"path_to_project\\media\\user_id_apiname.jpg",
 	
-	где path_to_project --- путь до папки проекта.
+	где path_to_project --- абс. путь до папки проекта.
 	"""
 	
 	return os.path.join('media', str(user_id) + api_name + ".jpg",)
@@ -99,7 +102,7 @@ def set_interval_OX(x):
 def set_plot_settings(x):
 	"""
 	Процедура установки параметров графика:
-	граф. интерфейс, формат данных и пр.
+	граф. интерфейс, формат данных и шкала.
 	"""
 	matplotlib.use('Agg')
 	axes = pylab.figure().gca()
@@ -111,7 +114,8 @@ def set_plot_settings(x):
 	
 def plot(reqs, user_id, api_name):
 	"""
-	Принимает на вход список экз. кл. ReqsStat (reqs)
+	Принимает на вход список экз. кл. 
+	api_reqs_stat.model.ReqsStat (reqs)
 	id пользователя (user_id) 
 	и имя функции REST API (api_name).
 	

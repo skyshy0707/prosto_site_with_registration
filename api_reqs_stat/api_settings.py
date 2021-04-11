@@ -2,11 +2,11 @@
 Модуль предназначен для хранения переменных.
 
 Переменные используются для задания значения поля 
-мультивыбора.
+мультивыбора функции REST API.
 
 Поле используется в классе формы и модели:
- --forms.SelectAPI
- --models.ReqsStat
+ --api_reqs_stat.forms.SelectAPI
+ --api_reqs_stat.models.ReqsStat
 """
 
 SIMPLE_USER_DATA = 'SUD'

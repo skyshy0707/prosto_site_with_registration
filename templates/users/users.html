@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block container %}
+
+	
+<div class="hero-body">
+    <div class="container">
+		<h3 class="title has-text-centered">
+			Пользователи:
+		</h3>
+
+		<div class="columns">
+			<div class="column is-offset-2 is-8">	
+				<form method="POST" action="{% url 'user:conf_delete_users' %}">
+					{% csrf_token %}
+					<div class="gy-5">
+					{% for user in users %}
+						<div class="p-2">
+							<div class="py-2 border border-primary rounded">{{ user.username }}</div>
+							<label class="container">
+								<p><input type="checkbox" name="id" value="{{ user.id }}">к удалению</p>
+								<span class="checkmark"></span>
+							</label>
+							<a href="{% url 'user:edit_user' user.id %}" class="py-1 btn btn-primary btn-lg active" role="button">РЕДАКТИРОВАТЬ</a>
+							<a href="{% url 'api_reqs_stat:stat' user.id %}" class="py-1 btn btn-primary btn-lg active" role="button">СТАТИСТИКА API</a>
+						</div>
+					{% endfor %}
+					</div>
+					{% if users|length > 0 %}
+						<input type="submit" id="sendAll" value="УДАЛИТЬ ВЫБРАННЫЕ">
+					{% endif %}
+				</form>
+			</div>
+		</div>
+	</div>
+ </div>	
+	
+{% endblock %}

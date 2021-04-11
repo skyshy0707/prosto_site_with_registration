@@ -1,17 +1,18 @@
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from users.models import User
 # Create your models here.
 
 
 class SecretKey(models.Model):
 	"""
-    Модель, предназначенная для хранения токена доступа
+    Модель предназначена для хранения токена доступа
 	к REST API в БД в зашифрованном виде.
 	
-	Поле created используется при проверке
+	Поле 'created' используется при проверке
 	срока токена, по которому клиент осуществляет доступ
 	к REST API.
     """

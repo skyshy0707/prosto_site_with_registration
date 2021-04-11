@@ -61,9 +61,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = False
+# переменные регистрации пользователей:
 ROOT_URLCONF = 'registration.urls'
 LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = 'menu:home' 
+LOGOUT_REDIRECT_URL = 'menu:home' 
 
 TEMPLATES = [
     {
@@ -95,26 +97,19 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'users.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+		'NAME': 'users.SignupForm.password_validation.MinimumLengthValidator',
+	},
+	{
+		'NAME': 'users.SignupForm.password_validation.UserAttributeSimilarityValidator',
+	},
 ]
-LOGIN_REDIRECT_URL = 'menu:home' 
-LOGOUT_REDIRECT_URL = 'menu:home' 
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -154,7 +149,6 @@ REST_FRAMEWORK = {
 
 #переменная представления обработки ошибки авторизации и проверки csrf-token:
 CSRF_FAILURE_VIEW = 'menu.views.csrf_failure'
-
 
 #параметры email host:
 EMAIL_USE_TLS = True

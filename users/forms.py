@@ -1,20 +1,24 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.core.validators import EmailValidator
 from django.forms import modelformset_factory
 from django.utils.translation import ugettext, ugettext_lazy as _
+
 from .models import User
+
 
 class SignupForm(UserCreationForm):
 	"""
 	Модель формы, используемая в шаблоне register.html
 	для заполнения данных пользователя при его регистрации
 	"""
-
-	email = forms.EmailField(max_length=500, help_text='обязательное')
 	
+	email = forms.EmailField(validators=[EmailValidator("Недопустимый формат email")])
 	error_messages = {'duplicate_username': _("Пользователь с таким именем уже есть"),
-					  'password_mismatch': _("Пароли не сопадают"),}
+					  'password_mismatch': _("Пароли не совпадают"),}
+					  
+	
 	class Meta:
 		model = User
 		fields = ('username', 'email', 'phone', 'password1', 'password2',)
@@ -108,28 +112,3 @@ class LoginForm(AuthenticationForm):
 				self.error_messages['inactive'],
 				code='inactive',
 			)
-
-
-class UserForm(forms.ModelForm):
-	"""
-	Модель формы, используемая в шаблоне users.html
-	для модели кл. User при редакировании данных
-	модели
-	"""
-	
-	on_delete = forms.BooleanField()
-	
-	class Meta:
-		model = User
-		fields = ('username', 
-				  'email', 
-				  'phone', 
-				  'is_staff', 
-				  'is_active')
-		labels = {'username': 'имя пользователя',
-				  'email': 'Email',
-				  'phone': 'Телефонный номер',
-				  'is_staff': 'Администратор?',
-				  'is_active': 'Активирован?',}
-	
-UserFormset = modelformset_factory(User, form=UserForm)
