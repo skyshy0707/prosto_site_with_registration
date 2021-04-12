@@ -153,7 +153,7 @@ def redirect_link(user, token):
 	"""
 	user_id = urlsafe_base64_encode(force_bytes(user.id))
 	return 'http://localhost:8000' + reverse('user:token_verification', 
-											 kwargs={'user_id': user_id,
+											 kwargs={'user_id': user_id, 
 													 'token': token,})
 
 def send_message_to_activate(user):

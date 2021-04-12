@@ -1,9 +1,9 @@
 from django.contrib import admin
-from users.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from .api_settings import API_NAMES, SIMPLE_USER_DATA
+from users.models import User
 
 # Create your models here.
 
